@@ -7,7 +7,7 @@
 // ROBT 4491, Winter 2015
 //
 // sMotor.cpp
-// For communication with DC motors
+// For communication with individual DC motors
 //
 // Written for Pololu 19:1 Metal Gearmotors (http://www.pololu.com/product/1442)
 // Using VNH5019 Motor Driver Carriers (http://www.pololu.com/product/1451)
@@ -48,7 +48,7 @@ sMotor::sMotor(int IN_A, int IN_B, int PWM, int EN_A, int EN_B, double motorAngl
 	pinMode(Pin_ENB, INPUT);
 	
 	//Motor mounting angle
-	thetaMotor = motorAngle*R2D;
+	thetaMotor = motorAngle*D2R;
 	
 	//Motor offset
 	kM = 1.0 + motorOffset;		
@@ -69,7 +69,7 @@ void sMotor::initializePWM()
 }
 
 //Set motor direction
-void Motor::setDirection(int dir)
+void sMotor::setDirection(double dir)
 {
 	//Drive motor in the positive direction
 	if(dir >0)
@@ -86,10 +86,10 @@ void Motor::setDirection(int dir)
 }
 
 //Set the speed of the motor
-void Motor::setSpeed(int speed)
+void sMotor::setSpeed(double speed)
 {
 	//Constrain output
-	speed = constrain(speed,-255,255);
+	speed = constrain(speed,-255.0,255.0);
 	
 	//Direction is already set (hopefully)
 	speed = abs(speed);
@@ -99,20 +99,20 @@ void Motor::setSpeed(int speed)
 }
 
 //Set the speed and direction of the motor
-void Motor::setVelocity(int vel)
+void sMotor::setVelocity(double vel)
 {
 	setDirection(vel);
 	setSpeed(vel);
 }
 
 //Exactly what it says
-int Motor::getEncoderCount()
+int sMotor::getEncoderCount()
 {
 	return encoderCount;
 }
 
 //Compute motor speed (rev/s)
-float Motor::getSpeed(float dt)
+float sMotor::getSpeed(float dt)
 {
 	//Calculate number of counts motor has moved
 	int deltaEncoderCount = encoderCount - prevEncoderCount;
